@@ -1,7 +1,6 @@
 import  { Server as SocketIOServer } from 'socket.io';
 import express from 'express';
 import http from 'http';
-import { count } from 'console';
 
 const app = express();
 const server = http.createServer(app);
@@ -10,6 +9,8 @@ const io = new SocketIOServer(server, {cors : {origin: '*'}});
 var counter = 0;
 
 var clients = new Map();
+var x = new Map();
+var y = new Map();
 
 app.use(express.static('public'));
 
@@ -18,17 +19,19 @@ app.get("/a", function (req, res) {
   });
 
 io.on('connection', (socket) => {
-    const sID = socket.id;
-    console.log(`Client connected:`+ sID);
-    clients.set(sID,socket);
-    
+    const SID = socket.id;
+    console.log(`Client connected:`+ SID);
+    clients.set(SID,socket);
+    x.set(SID,50);
+    y.set(SID,50);
     counter++;
-    if(counter == 1 ){
-        io.to(sID).emit("message", {playerNum : 0});
-    }
-    if(counter == 2 ){
-        io.to(sID).emit("message", {playerNum : 1});
-    }
+    io.to(SID).emit("message", {type:"direct", player:counter });
+
+    clients.forEach((client,clientID) => {
+        io.to(SID).emit("message", {type:"location", xPos:x.get(clientID), yPos:y.get(clientID) });
+
+
+    })
     
     
     socket.on('message', (message) => {
@@ -47,6 +50,18 @@ function BroadcastToExcept(senderID,message){
             client.emit('message',message);
         }
     });
+}
+
+
+function framerate(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function Game() {
+    while(true){
+        await framerate(17); 
+        
+    }
 }
 
 const PORT = process.env.PORT || 3000;

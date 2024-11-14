@@ -16,17 +16,6 @@ var inputs = {
     right : false
 }
 
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function Game() {
-    while(true){
-        await delay(17);
-        console.log("Running");
-        PlayerMovement();
-    }
-}
 
 
 function PlayerMovement(){
