@@ -1,3 +1,12 @@
 body{
-    background-color: rgb(42, 33, 71);
+    background-color: black;
+    margin: 0;
+
+}
+#screen{
+    position: absolute;
+    
+    top: 0px;
+    left: 0px;
+    background-color: rgb(45, 28, 61);
 }

@@ -1,4 +1,12 @@
 const socket = io.connect('http://localhost:3000');
+var canvas = document.getElementById("screen");
+var ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+var mapImage = new Image();
+mapImage.src = "/sheet.png";
+
+var map = [[]];
 
 var inputs = {
     up : false,
@@ -44,6 +52,37 @@ function sendMessage() {
 socket.on('message', function(message) {
     
 });
-socket.on("map",(map)=>{
-    console.log(map);
+socket.on("map",(loadedMap)=>{
+    map = loadedMap;
 });
+
+function loop() {
+    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+    const TILES_IN_ROW = 8;
+    const TILE_SIZE = 16;
+
+    for (let row = 0; row < map.length; row++) {
+        for (let col = 0; col < map[0].length; col++) {
+            const {id} = map[row][col];
+            const imageRow = parseInt(id /TILES_IN_ROW);
+            const imageCol = id % TILES_IN_ROW;
+            ctx.drawImage(
+                mapImage,
+                imageCol * TILE_SIZE,
+                imageRow *TILE_SIZE,
+                TILE_SIZE,
+                TILE_SIZE,
+                col*TILE_SIZE,
+                row*TILE_SIZE,
+                TILE_SIZE,
+                TILE_SIZE
+            );
+        }
+    }
+
+
+    window.requestAnimationFrame(loop);
+}
+
+
+window.requestAnimationFrame(loop);
