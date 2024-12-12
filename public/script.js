@@ -1,3 +1,32 @@
+class Players {
+    constructor(x,y,id){
+        this.x = x;
+        this.y = y;
+        this.id = id;
+    }
+    drawSelf(){
+        ctx.fillStyle = "black";
+        ctx.fillRect(this.x - 12.5 ,this.y - 12.5,25,25);
+    }
+    moveTo(x,y){
+        this.x = x;
+        this.y = y;
+    }
+    down(){
+        this.y += 5;
+    }
+    up(){
+        this.y -= 5;
+    }
+    left(){
+        this.x -= 5;
+    }
+    right(){
+        this.x += 5;
+    }
+}
+
+
 const socket = io.connect('http://localhost:3000');
 var canvas = document.getElementById("screen");
 var ctx = canvas.getContext("2d");
@@ -44,11 +73,6 @@ window.addEventListener("keyup", (e) => {
     }
 });
 
-function sendMessage() {
-    message = {x: myPos.x , y: myPos.y};
-    socket.emit('message', message);
-    
-}
 socket.on('message', function(message) {
     
 });
